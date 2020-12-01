@@ -7,25 +7,29 @@ import Carousel from "../Carousel";
 
 function Followers({ fetchMore }) {
   const [searchText, setSearchText] = useInput("");
-  const { data, isFetching, page, error } = useSelector((state) => state);
-  const [list, setList] = useState(data);
+  const { data, isFetching, page, error } = useSelector((state) => {
+    const list = state.data.filter((item) => item.login.includes(searchText))
+    return {
+      ...state,
+      data: list,
+    }
+  });
+
   const [start, setStart] = useState(0);
 
   useEffect(() => {
-    setList(data.filter((item) => item.login.includes(searchText)));
     setStart(0);
   }, [searchText]);
 
   useEffect(() => {
-    setList(data);
     if (page === 1) {
       setStart(0);
     }
-  }, [data, page]);
+  }, [page]);
 
   if (!!error) return <h5>{error.message}</h5>;
 
-  if (!data.length && !isFetching) return <h5>No records found</h5>;
+  // if (!data.length && !isFetching) return <h5>No records found</h5>;
 
   return (
     <div
@@ -47,7 +51,7 @@ function Followers({ fetchMore }) {
         start={start}
         setStart={setStart}
         isFetching={isFetching}
-        list={list}
+        list={data}
         fetchMore={fetchMore}
       />
     </div>

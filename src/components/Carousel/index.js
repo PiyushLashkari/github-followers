@@ -28,32 +28,43 @@ function Carousel({ step = 4, start, setStart, list, isFetching, fetchMore }) {
   if (!list.length && !isFetching) return <h5>No records found</h5>;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <div>
-        <button id="btnPrev" onClick={handlePrev} disabled={btnDisabled.btnPrev}>
-          &lt;
-        </button>
+    <>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <button
+            id="btnPrev"
+            onClick={handlePrev}
+            disabled={btnDisabled.btnPrev}
+          >
+            &lt;
+          </button>
+        </div>
+        <div>
+          {isFetching ? (
+            <LoadingPlaceholder step={step} />
+          ) : (
+            list
+              .slice(start, start + step)
+              .map((item) => <CarouselItem key={item.id} data={item} />)
+          )}
+        </div>
+        <div>
+          <button
+            id="btnNext"
+            onClick={handleNext}
+            disabled={btnDisabled.btnNext}
+          >
+            &gt;
+          </button>
+        </div>
       </div>
-      <div>
-        {isFetching ? (
-          <LoadingPlaceholder step={step} />
-        ) : (
-          list
-            .slice(start, start + step)
-            .map((item) => <CarouselItem key={item.id} data={item} />)
-        )}
-      </div>
-      <div>
-        <button id="btnNext" onClick={handleNext} disabled={btnDisabled.btnNext}>
-          &gt;
-        </button>
-      </div>
-    </div>
+      <div>{`Showing ${start} to ${start + step} of ${list.length}`}</div>
+    </>
   );
 }
 

@@ -26,10 +26,12 @@ export function profileReducer(state = initialState, action) {
         size: action.payload.length,
       };
     case "FOLLOWERS/FETCH_MORE":
+      const newData = [...state.data, ...action.payload];
       return {
         ...state,
         isFetching: false,
-        data: [...state.data, ...action.payload],
+        data: newData,
+        size: newData.length,
         error: null,
       };
     case "FOLLOWERS/ERROR":
